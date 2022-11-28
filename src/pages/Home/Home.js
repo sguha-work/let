@@ -4,7 +4,7 @@ function Home() {
     return (
         <div className="container">
             <div className="row">
-                <div className="col">
+                <div className="col-9">
                     <AddExpenceForm />
                 </div>
                 <div className="col">
