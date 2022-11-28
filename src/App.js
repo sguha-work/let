@@ -1,16 +1,19 @@
+// importing stylesheets
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+// importing library dependencies
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// importing self dependencies
 import Layout from './pages/Layout/LayOut';
 import Home from './pages/Home/Home';
 import PaymentType from './pages/PaymentType/PaymentType';
 import ExpenseCategory from './pages/ExpenseCategory/ExpenseCategory';
-import NoPage from './pages/NoPage/NoPage';
+import NoPage from './pages/NoPage/NoPage';// this is the 404 page
 function App() {
   return (
-    <div classNameName="App">
-      <BrowserRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -20,7 +23,6 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-    </div>
   );
 }
 const root = ReactDOM.createRoot(document.getElementById('root'));
