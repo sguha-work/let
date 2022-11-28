@@ -1,4 +1,4 @@
-import './AddExpenseCategory.css';
+import './ExpenseCategory.css';
 function AddExpenseCategory() {
     return(
         <>
