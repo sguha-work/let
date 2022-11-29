@@ -1,4 +1,6 @@
 import './AddExpenseForm.css';
+import ExpenseCategoryDropdown from './../ExpenseCategoryDropdown/ExpenseCategoryDropdown';
+import PaymentTypeDropdown from '../PaymentTypeDropdown/PaymentTypeDropdown';
 function AddExpenseForm() {
     return (
         <>
@@ -16,11 +18,7 @@ function AddExpenseForm() {
                         <label for="lname">Category</label>
                     </div>
                     <div className="col-75">
-                    <select name="category">
-                            <option value="food">Food</option>
-                            <option value="travel">Travel</option>
-                            <option value="usa">USA</option>
-                        </select>
+                    <ExpenseCategoryDropdown></ExpenseCategoryDropdown>
                     </div>
                 </div>
                 <div className="row">
@@ -28,11 +26,7 @@ function AddExpenseForm() {
                         <label for="country">Payment type</label>
                     </div>
                     <div className="col-75">
-                        <select name="paymentType">
-                            <option value="upi">UPI</option>
-                            <option value="creadit_card">Credit card</option>
-                            <option value="cash">Cash</option>
-                        </select>
+                        <PaymentTypeDropdown></PaymentTypeDropdown>
                     </div>
                 </div>
                 <div className="row">
