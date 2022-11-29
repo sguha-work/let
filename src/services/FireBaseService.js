@@ -1,17 +1,67 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-//import { getFirestore, collection, addDoc } from "firebase/firestore";
+class CacheHandler {
+    #localStorageIndex = 'lclstr_fb_backup';
+    get(keyName = '') {
+        if (keyName !== '') {
+            try {
+                let data = JSON.parse(window.localStorage[this.#localStorageIndex])[keyName];
+                if (typeof data === 'undefined') {
+                    return null;
+                } else {
+                    return data;
+                }
+            } catch (error) {
+                console.error('Local data read error', error);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    set(keyName = '', data) {console.log('set called',keyName);
+        if (keyName !== '') {
+            try {
+                let datainlocal = JSON.parse(window.localStorage[this.#localStorageIndex]);
+                datainlocal[keyName] = data
+                window.localStorage[this.#localStorageIndex]= JSON.stringify(datainlocal);
+                return true;
+            } catch (error) {
+                console.error('Local data write error', error);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    merge(keyName = '', data) {
+        if (keyName !== '') {
+            try {
+                let oldData = JSON.parse(window.localStorage[this.#localStorageIndex])[keyName];
+                let finalData = [...oldData, data]; console.log('finalData', finalData);
+                this.set(keyName, finalData);
+                return true;
+            } catch (error) {
+                console.error('Local data write error', error);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+}
 class FireBaseService {
     instance = null;
+    dbUpdatedEventName = 'event_LOCAL-DB-UPDATED';
     #firebaseConfig = {
-        apiKey: "AIzaSyByZryIaBPAwcSps2qZftgSKDlf8C3tQfQ",
-        authDomain: "react-practice-9c107.firebaseapp.com",
-        projectId: "react-practice-9c107",
-        storageBucket: "react-practice-9c107.appspot.com",
-        messagingSenderId: "952298576602",
-        appId: "1:952298576602:web:77daf2b7ce4c75becb63e3",
-        measurementId: "G-545W6YF87V"
+        apiKey: "AIzaSyCU5zqsKtPeUyKP0vO8wIREEMlDDVhg_2g",
+        authDomain: "let-db.firebaseapp.com",
+        projectId: "let-db",
+        storageBucket: "let-db.appspot.com",
+        messagingSenderId: "69735200889",
+        appId: "1:69735200889:web:0317d719a1b2039297bca8"
     };
+    #cacheInstance = new CacheHandler();
     #app = null;
     constructor() {
         this.#app = initializeApp(this.#firebaseConfig);
@@ -22,18 +72,24 @@ class FireBaseService {
         }
         return this.instance;
     }
-    async get(collectionName, documentId) {
+    async getCollection(collectionName) {
         try {
-            const db = getFirestore(this.#app);
-            const collectionRef = collection(db, collectionName);
-            const docRef = await getDocs(collectionRef);
-            const docs = docRef.docs.map(doc => {
-                return {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            });
-            return Promise.resolve(docs);
+            const cacheResponse = this.#cacheInstance.get(collectionName);
+            if (cacheResponse === null) {
+                const db = getFirestore(this.#app);
+                const collectionRef = collection(db, collectionName);
+                const docRef = await getDocs(collectionRef);
+                const docs = docRef.docs.map(doc => {
+                    return {
+                        id: doc.id,
+                        ...doc.data()
+                    }
+                });
+                this.#cacheInstance.set(collectionName, docs);
+                return Promise.resolve(docs);
+            } else {
+                return Promise.resolve(cacheResponse);
+            }
         } catch (error) {
             console.log('Firebase error', error);
             return Promise.reject(error);
@@ -44,6 +100,8 @@ class FireBaseService {
         try {
             const db = getFirestore(this.#app);
             const dbRef = collection(db, collectionName);
+            this.#cacheInstance.merge(collectionName, data);
+            window.dispatchEvent(new Event(this.dbUpdatedEventName));
             await addDoc(dbRef, data);
             return Promise.resolve();
         } catch (error) {

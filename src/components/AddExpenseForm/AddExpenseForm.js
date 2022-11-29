@@ -1,5 +1,5 @@
 import './AddExpenseForm.css';
-import ExpenseCategoryDropdown from './../ExpenseCategoryDropdown/ExpenseCategoryDropdown';
+import ExpenseCategoryDropdown from '../ExpenseTypeDropdown/ExpenseTypeDropdown';
 import PaymentTypeDropdown from '../PaymentTypeDropdown/PaymentTypeDropdown';
 function AddExpenseForm() {
     return (
@@ -7,7 +7,7 @@ function AddExpenseForm() {
             <form action="/action_page.php">
                 <div className="row">
                     <div className="col-25">
-                        <label for="fname">Amaount</label>
+                        <label>Amaount</label>
                     </div>
                     <div className="col-75">
                         <input type="number" name="amount" placeholder="Amaount" />
@@ -15,7 +15,7 @@ function AddExpenseForm() {
                 </div>
                 <div className="row">
                     <div className="col-25">
-                        <label for="lname">Category</label>
+                        <label>Category</label>
                     </div>
                     <div className="col-75">
                     <ExpenseCategoryDropdown></ExpenseCategoryDropdown>
@@ -23,7 +23,7 @@ function AddExpenseForm() {
                 </div>
                 <div className="row">
                     <div className="col-25">
-                        <label for="country">Payment type</label>
+                        <label>Payment type</label>
                     </div>
                     <div className="col-75">
                         <PaymentTypeDropdown></PaymentTypeDropdown>
@@ -31,7 +31,7 @@ function AddExpenseForm() {
                 </div>
                 <div className="row">
                     <div className="col-25">
-                        <label for="subject">Description</label>
+                        <label>Description</label>
                     </div>
                     <div className="col-75">
                         <textarea id="subject" name="subject" placeholder="Write description.." style={{ "height": "200px" }}></textarea>

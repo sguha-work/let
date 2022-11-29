@@ -1,46 +1,39 @@
+import { useState } from "react";
 import './AddPaymentTypeForm.css';
+import PaymentTypeService from './../../services/PaymentTypeService';
 function AddPaymentTypeForm() {
+    const [paymentType, setPaymentType] = useState([]);
+    const paymentTypeService = PaymentTypeService.getInstance();
+    const paymentTypeInputboxChangeHandler = (event)=>{
+        setPaymentType(event.target.value);
+    }
+    const addPaymentType = async(event)=>{
+        event.preventDefault();
+        try {
+        await paymentTypeService.set({
+            name: paymentType,
+            value: paymentType.toLowerCase()
+        });
+        alert(`Payment type: ${paymentType} added successfully!`);
+    } catch(error) {
+        alert('Adding data failed');
+    }
+    }
     return (
         <>
-            <form action="/action_page.php">
+            <form onSubmit={addPaymentType}>
                 <div className="row">
-                    <div className="col-25">
-                        <label for="fname">First Name</label>
-                    </div>
-                    <div className="col-75">
-                        <input type="text" id="fname" name="firstname" placeholder="Your name.." />
+                    <div className="col">
+                        <input type="text" id="paymentType" name="paymentType" placeholder="Payment type name.." value={paymentType} onChange={paymentTypeInputboxChangeHandler}/>
                     </div>
                 </div>
+                <br/>
                 <div className="row">
-                    <div className="col-25">
-                        <label for="lname">Last Name</label>
+                    <div className='col-50'>
+                        <input type="submit" value="Submit" />
                     </div>
-                    <div className="col-75">
-                        <input type="text" id="lname" name="lastname" placeholder="Your last name.." />
+                    <div className='col-50'>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-25">
-                        <label for="country">Country</label>
-                    </div>
-                    <div className="col-75">
-                        <select id="country" name="country">
-                            <option value="australia">Australia</option>
-                            <option value="canada">Canada</option>
-                            <option value="usa">USA</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-25">
-                        <label for="subject">Subject</label>
-                    </div>
-                    <div className="col-75">
-                        <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-                    </div>
-                </div>
-                <div className="row">
-                    <input type="submit" value="Submit" />
                 </div>
             </form>
         </>
